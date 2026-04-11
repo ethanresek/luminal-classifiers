@@ -19,7 +19,9 @@ def preprocess(df, keep, y_old_name='pam50_+_claudin-low_subtype', y_new_name='s
     df = df[df[y_old_name].isin(allowed)]
     df[y_old_name] = df[y_old_name].map(transform)
     df= df.rename(columns={y_old_name: y_new_name})
-    return df
+    y_df = df[y_new_name]
+    X_df = df.drop(columns=y_new_name)
+    return X_df, y_df
 
 def split_data(df, test_size=0.15, val_size=0.176):
     train_val, test = train_test_split(df, test_size=test_size, random_state=42)
