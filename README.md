@@ -1,13 +1,16 @@
 # How Many Genes Does It Take? Minimal gene expression classifiers for distinguishing Luminal A and Luminal B breast cancer
 
+## File Structure
+-- TODO
+
 ## Project Abstract
-Breast cancer is a leading cause of death among women, and finding accurate diagnoses quickly is important for creating treatment plans. This is particularly challenging for Luminal A and Luminal B subtypes, which are both ER-positive and HER2-negative by standard clinical testing and therefore cannot be reliably distinguished without molecular profiling. The PAM50 assay addresses this by measuring the activity of 50 genes, but the question of how many genes are actually necessary remains open. Our project asks: can we select a smaller set of genes while still reliably classifying the cancer subtype? Our project uses the METABRIC dataset, which contains 331 gene expression features from 1,140 patients that will be used as feature dimensions and samples, respectively. We will train three different classifier models: a support vector machine with RBF kernel, a Random Forest model, and a deep neural network across five gene panel sizes (5, 10, 20, 50, 331 genes) from the dataset. We will use these models to classify a set of training samples into the two subtypes and compare the three models’ effectiveness in their classification.
+Breast cancer is a leading cause of death among women, and finding accurate diagnoses quickly is important for creating treatment plans. This is particularly challenging for Luminal A and Luminal B subtypes, which are both ER-positive and HER2-negative by standard clinical testing and therefore cannot be reliably distinguished without molecular profiling. The PAM50 assay addresses this by measuring the activity of 50 genes, but the question of how many genes are actually necessary remains open. Our project asks: can we select a smaller set of genes while still reliably classifying the cancer subtype? Our project uses the METABRIC dataset, which contains 489 gene expression features from 1,140 patients that will be used as feature dimensions and samples, respectively. We will train three different classifier models: a support vector machine with RBF kernel, a Random Forest model, and a deep neural network across five gene panel sizes (5, 10, 20, 50, 489 genes) from the dataset. We will use these models to classify a set of training samples into the two subtypes and compare the three models’ effectiveness in their classification.
 
 ## Dataset
 We use the METABRIC (Molecular Taxonomy of Breast Cancer International Consortium) dataset, publicly available on [Kaggle](https://www.kaggle.com/datasets/raghadalharbi/breast-cancer-gene-expression-profiles-metabric/) and [cBioPortal](https://www.cbioportal.org/study/summary?id=brca_metabric). METABRIC is a large breast cancer study from Canada and the UK that followed 1,904 patients for an average of about 10 years. After keeping only Luminal A and Luminal B patients, the working dataset is:
 - 1,140 patients: 679 Luminal A (59.6%) and 461 Luminal B (40.4%)
-- 331 gene expression features, each measuring how active a cancer-relevant gene is in the tumor relative to normal tissue. These include cell division genes (CDK1, AURKA, CCNB1), DNA repair genes (RAD51, BRCA1, CHEK1), known cancer driver genes (TP53, PIK3CA, MYC), and cell identity genes (CDH1, RUNX1, TGFB3). 
-All gene expression values are already normalized, but we needed to filter out any non-Luminal cancer, apply binary encoding to the two types, and split the dataset into input and ground truth sets.
+- 489 gene expression features, each measuring how active a cancer-relevant gene is in the tumor relative to normal tissue. These include cell division genes (CDK1, AURKA, CCNB1), DNA repair genes (RAD51, BRCA1, CHEK1), known cancer driver genes (TP53, PIK3CA, MYC), and cell identity genes (CDH1, RUNX1, TGFB3). 
+All gene expression values are already normalized, but we needed to filter out any non-Luminal cancer, apply binary encoding to the two types (LumA=1, LumB=2), and split the dataset into input and ground truth sets.
 
 The dataset CSV is available in our repo in the data folder (METABRIC_RNA_Mutation.csv) or from the links above.
 
@@ -36,14 +39,13 @@ file_name = "<your_file_name_here>"  # replace with actual filename
 data = joblib.load(file_name)
 ```
 
-The specific shape of each joblib is specified below.  -- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+The specific shape of each joblib is specified below.
 
 #### SVM
--- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- TODO
 
 #### Random Forest
-The Random Forest Jupyter notebook saves two models on joblib, creates ENTERPLOTNUMBERHERE plots, and reports various statistics regarding the models. The first joblib file (ENTERMODELNAMEHERE) contains the model that uses all 489 genes. The joblib file contains:
+The Random Forest Jupyter notebook saves two models on joblib, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (models/final_rf_base_random_search_20260424_092839.joblib) contains the model that uses all 489 genes. The joblib file contains:
 
 - `model`: the result of the RandomizedSearchCV
 - `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
@@ -54,19 +56,39 @@ To extract the model itself, load the joblib file and run:
 model = data['model'].best_estimator_
 ```
 
-The second joblib file (ENTERMODELNAMEHERE) contains the rest of the models. This contains:
+The second joblib file (models/final_rf_grid_searches_20260424_124604.joblib) contains the rest of the models. This contains:
 
 - `searches`: The results of the searches for every top k feature set. Stored in an array.
 - `feature_indices`: The indices of X that contain the top k features. 2d array where each inner array contains k indices
 - `feature_counts`: The number of features included in each top k model. Stored in an array.
+- `rf_results`: An array of objects that contain accuracy scoring for each feature size
+- `best_params_per_panel`: An array of objects containing the best hyperparameters selected by the CV
 
-The indices of each outermost array map to each other. So, for example, the search result, indices, and count for the top-5 model is stored in index 0 of each array.
+The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
 
 #### Multi-Layer Perceptron
+The MLP Jupyter notebook saves two models on joblib, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (PUTMODELNAMEHERE) contains the model that uses all 489 genes. The joblib file contains:
+
+- `model`: the result of the RandomizedSearchCV
+- `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
+
+To extract the model itself, load the joblib file and run:
+
+```
+model = data['model'].best_estimator_
+```
+The second joblib file (PUTMODELNAMEHERE) contains the rest of the models. This contains:
+
+- `searches`: The results of the searches for every top k feature set. Stored in an array.
+- `feature_indices`: The indices of X that contain the top k features. 2d array where each inner array contains k indices
+- `feature_counts`: The number of features included in each top k model. Stored in an array.
+- `fold_evals`: Evaluation of models across 5-fold cross-validation. Used for plotting.
+
+The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
 
 ## Evaluation Metrics
 All models are compared using F1-Score, ROC-AUC, and balanced accuracy. The same test set is used across all methods for fair and accurate comparison.
 
 - F1-Score: Combination of precision and recall. Precision measures how many positive predictions were correct, and recall measures how many actual positives you caught. This measures how well the model performs with a threshold of 0.5.
-- ROC-AUC: Measures how well model distinguishes between classes across all positive decision thresholds from 0 to 1, not just the 0.5 used by F1. The ROC curve measures the ability to distinguish, and AUC quantifies the overall performance, with 0.5 being equivalent to random guessing and 1.0 being perfect. Evaluates predicted probabilities rather than just final binary predictions.
+- ROC-AUC: Measures how well model distinguishes between classes across all decision thresholds from 0 to 1, not just the 0.5 used by F1. The ROC curve measures the ability to distinguish, and AUC quantifies the overall performance, with 0.5 being equivalent to random guessing and 1.0 being perfect. Evaluates predicted probabilities rather than just final binary predictions.
 - Balanced Accuracy: Averages recall of each class separately, so each class is treated equally regardless of any class imbalance. This is used rather than standard average because of our imbalanced dataset.
