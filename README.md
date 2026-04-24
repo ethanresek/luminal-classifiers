@@ -42,10 +42,25 @@ data = joblib.load(file_name)
 The specific shape of each joblib is specified below.
 
 #### SVM
--- TODO
+The Support Vector Machine Jupyter notebook saves one joblib file, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The joblib file (models/final_svm_results_20260424_204351.joblib) contains all the searches from each panel size.
+
+- `results`: A dictionary where each key is a panel size and each value is a list of five dictionaries (one per fold). For example, results\[20]\[2] gives the metrics and predictions of the third fold of the 20-gene panel. Each inner dictionary contains:
+  - `f1`
+  - `balanced_accuracy`
+  - `auc`
+  - `C`
+  - `gamma`
+  - `y_true`
+  - `y_pred`
+  - `y_prob`
+- `best_params_per_panel`: An array of objects containing the best hyperparameters selected by the CV
+- `panel_sizes`: The number of features included in each top k model. Stored in an array.
+- `t_stats`: The importance vector for every gene.
+
+The joblib does not store the models themselves. It is our fastest to train by far (only takes a few minutes), so the models can easily be replicated by running the code.
 
 #### Random Forest
-The Random Forest Jupyter notebook saves two models on joblib, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (models/final_rf_base_random_search_20260424_092839.joblib) contains the model that uses all 489 genes. The joblib file contains:
+The Random Forest Jupyter notebook saves two joblib files, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (models/final_rf_base_random_search_20260424_092839.joblib) contains the model that uses all 489 genes. The joblib file contains:
 
 - `model`: the result of the RandomizedSearchCV
 - `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
@@ -67,7 +82,7 @@ The second joblib file (models/final_rf_grid_searches_20260424_124604.joblib) co
 The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
 
 #### Multi-Layer Perceptron
-The MLP Jupyter notebook saves two models on joblib, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (PUTMODELNAMEHERE) contains the model that uses all 489 genes. The joblib file contains:
+The MLP Jupyter notebook saves two joblib files, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (PUTMODELNAMEHERE) contains the model that uses all 489 genes. The joblib file contains:
 
 - `model`: the result of the RandomizedSearchCV
 - `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
@@ -82,7 +97,13 @@ The second joblib file (PUTMODELNAMEHERE) contains the rest of the models. This 
 - `searches`: The results of the searches for every top k feature set. Stored in an array.
 - `feature_indices`: The indices of X that contain the top k features. 2d array where each inner array contains k indices
 - `feature_counts`: The number of features included in each top k model. Stored in an array.
-- `fold_evals`: Evaluation of models across 5-fold cross-validation. Used for plotting.
+- `fold_evals`: A dictionary where each key is a panel size and each value is a list of five dictionaries (one per fold). For example, fold_evals\[20]\[2] gives the metrics and predictions of the third fold of the 20-gene panel. Each inner dictionary contains:
+  -  `f1`
+  - `balanced_accuracy`
+  - `roc_auc`
+  - `y_true`
+  - `y_pred`
+  - `y_pred_prob`
 
 The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
 
