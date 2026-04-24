@@ -42,7 +42,7 @@ The specific shape of each joblib is specified below. -- TODO!!!!!!!!!!!!!!!!!!!
 -- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #### Random Forest
-The RF model is split into 2 Jupyter notebooks. If creating a new model, run CS6140_RandomForest_Base.ipynb first. This creates a model trained on all the possible gene features and prints accuracy results. The model will be saved with the following fields:
+The Random Forest Jupyter notebook saves two models on joblib, creates ENTERPLOTNUMBERHERE plots, and reports various statistics regarding the models. The first joblib file (ENTERMODELNAMEHERE) contains the model that uses all 489 genes. 
 
 - `model`: the best estimator from hyperparameter search
 - `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
