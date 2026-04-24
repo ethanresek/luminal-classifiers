@@ -18,38 +18,55 @@ We used a support vector machine (SVM) with Radial Basis Function (RBF) kernel, 
 
 The code has been written to run smoothly on local machines and on Google Colab. File paths resolve differently, but this is handled in a try-except block.
 
-Google Colab: The code clones the git repo and imports any required files. If any updates are made to the repo while you are working in Colab, you must rerun the cloning code block to get the updated repo code.
+Google Colab: The code clones the git repo and imports any required files. If any updates are made to the repo while you are working in Colab, you must rerun the cloning code block to get the updated repo code. Also, if running on Colab, necessary pip installs are handled by the code. 
 
 Local: Please run the following in the terminal to install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
-If running on Colab, necessary pip installs are handled by the code.
 
 ### Models
+The models we created can be reproduced by running the corresponding notebook. If the repo has not been edited, they can run as is. Where to edit the CSV file path has been noted in each of the notebooks in case it changes. The random state seed is consistent throughout (42).
+
 We have saved all our trained models in the "models" directory as joblib files. To access any of the joblib files, please run:
 
-```python
-import joblib
+```
 file_name = "<your_file_name_here>"  # replace with actual filename
 data = joblib.load(file_name)
 ```
 
-The specific shape of each joblib is specified below. -- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+The specific shape of each joblib is specified below.  -- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 #### SVM
 -- TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #### Random Forest
-The Random Forest Jupyter notebook saves two models on joblib, creates ENTERPLOTNUMBERHERE plots, and reports various statistics regarding the models. The first joblib file (ENTERMODELNAMEHERE) contains the model that uses all 489 genes. 
+The Random Forest Jupyter notebook saves two models on joblib, creates ENTERPLOTNUMBERHERE plots, and reports various statistics regarding the models. The first joblib file (ENTERMODELNAMEHERE) contains the model that uses all 489 genes. The joblib file contains:
 
-- `model`: the best estimator from hyperparameter search
+- `model`: the result of the RandomizedSearchCV
 - `X_train`, `X_test`, `y_train`, `y_test`: the train/test split used for that model
 
-Then import that model into the CS6140_RandomForest_Features.ipynb by changing the file path where marked in the code. The features journal uses the base model to select the top k features, and retrains new models with each of the top k features. This also creates a joblib file with the following fields:
+To extract the model itself, load the joblib file and run:
 
-- `searches`: The results of the searches for every top k feature set
-- `feature_indices`: 
+```
+model = data['model'].best_estimator_
+```
+
+The second joblib file (ENTERMODELNAMEHERE) contains the rest of the models. This contains:
+
+- `searches`: The results of the searches for every top k feature set. Stored in an array.
+- `feature_indices`: The indices of X that contain the top k features. 2d array where each inner array contains k indices
+- `feature_counts`: The number of features included in each top k model. Stored in an array.
+
+The indices of each outermost array map to each other. So, for example, the search result, indices, and count for the top-5 model is stored in index 0 of each array.
 
 #### Multi-Layer Perceptron
+
+## Evaluation Metrics
+All models are compared using F1-Score, ROC-AUC, and balanced accuracy. The same test set is used across all methods for fair and accurate comparison.
+
+- F1-Score: Combination of precision and recall. Precision measures how many positive predictions were correct, and recall measures how many actual positives you caught. This measures how well the model performs with a threshold of 0.5.
+- ROC-AUC: Measures how well model distinguishes between classes across all positive decision thresholds from 0 to 1, not just the 0.5 used by F1. The ROC curve measures the ability to distinguish, and AUC quantifies the overall performance, with 0.5 being equivalent to random guessing and 1.0 being perfect. Evaluates predicted probabilities rather than just final binary predictions.
+- Balanced Accuracy: Averages recall of each class separately, so each class is treated equally regardless of any class imbalance. This is used rather than standard average because of our imbalanced dataset.
