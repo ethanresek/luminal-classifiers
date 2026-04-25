@@ -119,7 +119,7 @@ The range of hyperparameters that are used in the initial cross validation, with
 
 - **Number of estimators** (100, 200, 500, 1000): Covers the range where RF performance typically [plateaus](https://pmc.ncbi.nlm.nih.gov/articles/PMC11959736/) (not including a 2000 estimator model to avoid excessive runtimes)
 - **Maximum depth** (5, 10, 20, 30, None): Provides a spread from heavily constrained trees to unrestrained growth
-Minimum samples to split (2, 5, 10, 20): Provides spread from minimal to aggressive restriction on splitting internal nodes. Used to test lighter to stricter regularization.
+- **Minimum samples to split** (2, 5, 10, 20): Provides spread from minimal to aggressive restriction on splitting internal nodes. Used to test lighter to stricter regularization.
 - **Min samples at leaf** (1, 2, 5, 10): Similar effect as above, but sets minimum number of samples required at a leaf node, which can prevent branches capturing only a few data points from being created.
 - **Max features** (sqrt, log2, 0.1, 0.25, 0.5): Standards provided by scikit, plus a few manual fractions for comparison. Sets limit of features to use when considering a split in the node.
 - **Max leaf nodes** (None, 50, 100, 200, 500): Similar to max_depth, but limits number of leaf nodes instead. Values test range of different constraints.
