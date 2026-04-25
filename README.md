@@ -116,6 +116,18 @@ The second joblib file (models/final_rf_grid_searches_20260424_124604.joblib) co
 
 The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
 
+The range of hyperparameters that are used in the initial cross validation, with a brief explanation, follow:
+
+- **Number of estimators** (100, 200, 500, 1000): Covers the range where RF performance typically [plateaus](https://pmc.ncbi.nlm.nih.gov/articles/PMC11959736/) (not including a 2000 estimator model to avoid excessive runtimes)
+- **Maximum depth** (5, 10, 20, 30, None): Provides a spread from heavily constrained trees to unrestrained growth
+Minimum samples to split (2, 5, 10, 20): Provides spread from minimal to aggressive restriction on splitting internal nodes. Used to test lighter to stricter regularization.
+- **Min samples at leaf** (1, 2, 5, 10): Similar effect as above, but sets minimum number of samples required at a leaf node, which can prevent branches capturing only a few data points from being created.
+- **Max features** (sqrt, log2, 0.1, 0.25, 0.5): Standards provided by scikit, plus a few manual fractions for comparison. Sets limit of features to use when considering a split in the node.
+- **Max leaf nodes** (None, 50, 100, 200, 500): Similar to max_depth, but limits number of leaf nodes instead. Values test range of different constraints.
+- **Minimum impurity decrease** (0.0, 0.001, 0.005, 0.01, 0.05): Prevents node splitting unless the reduction of impurity hits a certain point. Impurity values between 0 and 1, so changes must be small.
+- **Max samples** (0.5, 0.7, 0.8, 0.9, None): Limits maximum set of training data that each tree sees. Balances tree diversity against individual tree quality.
+- **Criterion** (gini, entropy, log_loss): Standard criterion provided by Scikit.
+
 #### Multi-Layer Perceptron
 The MLP Jupyter notebook saves two joblib files, creates and saves 4 plots as PNG files, and reports various statistics regarding the models. The first joblib file (models/final_MLP_base_search_20260424_191855.joblib) contains the model that uses all 489 genes. The joblib file contains:
 
@@ -141,6 +153,14 @@ The second joblib file (models/final_MLP_grid_searches_20260424_200512.joblib) c
   - `y_pred_prob`
 
 The indices of each outermost array map to each other. So, for example, the search result, indices, count, results, and params for the top-5 model are stored in index 0 of each array.
+
+The range of hyperparameters that are used in the initial cross validation, with a brief explanation, follow:
+
+- **Hidden sizes** ([256, 128], [128, 64], [64, 32], [128]): Various two layer architectures, all compressing the representation towards the binary output but with different capacities, and one single layer model
+- **Dropout** (0.1, 0.2, 0.3, 0.4, 0.5): 0.1 provides light regulation and 0.5 is near the point where the network loses too much information each [pass](https://jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf). 
+- **Sparsity** (1e-2, 5e-2, 1e-1, 5e-1): Controls sensitivity of L1 penalty on gate weights. Relative to a usual BCE loss between 0 and 1, lower than 1e-4 and it would have little effect, but 1e-2 begins to dominate the error.
+- **Learning rate** (1e-4, 5e-4, 1e-3, 5e-3, 1e-2): Uses learning rates that are at max an order of magnitude from the learning rate used in the original [Adam paper](https://arxiv.org/pdf/1412.6980).  
+- **Batch size** (16, 32, 64): Standard power of 2 values for computational efficiency. Any larger and the batch sizes would allow too few updates per epoch for proper gradient updates.
 
 ## Evaluation Metrics
 All models are compared using F1-Score, ROC-AUC, and balanced accuracy.
