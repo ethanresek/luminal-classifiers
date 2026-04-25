@@ -6,7 +6,6 @@
 ├── data/
 │   └── METABRIC_RNA_Mutation.csv
 ├── models/
-│   ├── old/
 │   ├── final_MLP_base_search_20260424_191855.joblib
 │   ├── final_MLP_grid_searches_20260424_200512.joblib
 │   ├── final_rf_base_random_search_20260424_092839.joblib
@@ -24,11 +23,10 @@
 │   │   ├── rf_gene_scatter_plot.png
 │   │   └── rf_performance_across_panels.png
 │   ├── SVM/
-│   │   ├── svm_confusion_matrices.png
-│   │   ├── svm_feature_importances.png
-│   │   ├── svm_gene_scatter_plot.png
-│   │   └── svm_performance_across_panels.png
-│   └── old
+│       ├── svm_confusion_matrices.png
+│       ├── svm_feature_importances.png
+│       ├── svm_gene_scatter_plot.png
+│       └── svm_performance_across_panels.png
 ├── CS6140_MLP.ipynb
 ├── CS6140_RandomForest.ipynb
 ├── CS6140_SVM.ipynb
