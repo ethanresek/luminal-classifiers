@@ -30,6 +30,7 @@
 ├── CS6140_MLP.ipynb
 ├── CS6140_RandomForest.ipynb
 ├── CS6140_SVM.ipynb
+├── heat_map_to_compare_top_30_genes_in_SVM,_RF,_and_MLP.ipynb
 ├── pre_process.py
 └── requirements.txt
 ```
@@ -159,6 +160,9 @@ The range of hyperparameters that are used in the initial cross validation, with
 - **Sparsity** (1e-2, 5e-2, 1e-1, 5e-1): Controls sensitivity of L1 penalty on gate weights. Relative to a usual BCE loss between 0 and 1, lower than 1e-4 and it would have little effect, but 1e-2 begins to dominate the error.
 - **Learning rate** (1e-4, 5e-4, 1e-3, 5e-3, 1e-2): Uses learning rates that are at max an order of magnitude from the learning rate used in the original [Adam paper](https://arxiv.org/pdf/1412.6980).  
 - **Batch size** (16, 32, 64): Standard power of 2 values for computational efficiency. Any larger and the batch sizes would allow too few updates per epoch for proper gradient updates.
+
+### Heatmap
+The code for creating the cross-model heatmap is in heat_map_to_compare_top_30_genes_in_SVM,_RF,_and_MLP.ipynb. The gene lists for each model are hardcoded from our final models, however, and would need to be updated if changes to the models were made.
 
 ## Evaluation Metrics
 All models are compared using F1-Score, ROC-AUC, and balanced accuracy.
